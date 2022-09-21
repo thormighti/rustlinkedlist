@@ -15,6 +15,7 @@ pub struct Node{
 }
 
 //can add at both ends for a linkedlist
+#[derive(Debug)]
 pub struct SinglyLinkedList{
     head: Singlelinkedlist,
     tail: Singlelinkedlist,
@@ -22,17 +23,17 @@ pub struct SinglyLinkedList{
 }
 
 impl Node{
-    fn new(value:i32) -> Rc<RefCell<Node>>{
+   pub fn new(value:i32) -> Rc<RefCell<Node>>{
         Rc::new(RefCell::new(Node{
             data:value,
-            next:Node
+            next:None
         }))
 
     }
 }
 impl SinglyLinkedList{
     //lets create an emptylist
-    fn new_mt() -> SinglyLinkedList{
+   pub fn new_mt() -> SinglyLinkedList{
         SinglyLinkedList{
             head:None,
             tail:None,
@@ -40,7 +41,7 @@ impl SinglyLinkedList{
         }
     }
 
-    fn push(&mut self, value:i32){
+  pub  fn push(&mut self, value:i32){
         let new = Node::new(value);
         match self.tail.take(){
             Some(previous) => previous.borrow_mut().next = Some(Rc::clone(&new)),
@@ -52,10 +53,16 @@ impl SinglyLinkedList{
 
     pub fn pop(&mut self) -> Option<i32>{
         self.head.take().map(|head| {
-            match head.borrow_mut().next.take() {
+            if let Some(next) = head.borrow_mut().next.take(){
+                self.head = Some(next);
+            }
+            else {
+                self.tail.take();
+            }
+           /* match head.borrow_mut().next.take() {
                 Some(next)=> self.head = Some(next),
                 None => self.tail.take()
-            }
+            }*/
             self.lens -= 1;
             Rc::try_unwrap(head).ok().expect("A fail").into_inner().data
         })
@@ -66,9 +73,13 @@ impl SinglyLinkedList{
         self.lens==0
     }
 
+    pub fn length(&self) -> u32{
+        self.lens
+    }
+
     //leta take a peek at the head data
 
-    pub fn peek(&self) -> Option<i32>{
+   /* pub fn peek(&self) -> Option<i32>{
         self.head.map(|node| Rc::try_unwrap(node).ok().expect("no val").into_inner().data )
-    }
+    }*/
 }
