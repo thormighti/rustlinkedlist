@@ -11,5 +11,10 @@ fn main() {
     let first_item = list.pop().unwrap();
     println!(" first item in queue : {}", first_item);
 
+    println!("peek at th top {:?}", list.peek());
+
  println!("{}", list.is_empty());
 }
+
+
+// println!("Head :{:?} , Head value:", list.head.as_ref());

@@ -17,7 +17,7 @@ pub struct Node{
 //can add at both ends for a linkedlist
 #[derive(Debug)]
 pub struct SinglyLinkedList{
-    head: Singlelinkedlist,
+   pub head: Singlelinkedlist,
     tail: Singlelinkedlist,
     lens: u32
 }
@@ -59,10 +59,7 @@ impl SinglyLinkedList{
             else {
                 self.tail.take();
             }
-           /* match head.borrow_mut().next.take() {
-                Some(next)=> self.head = Some(next),
-                None => self.tail.take()
-            }*/
+
             self.lens -= 1;
             Rc::try_unwrap(head).ok().expect("A fail").into_inner().data
         })
@@ -77,9 +74,9 @@ impl SinglyLinkedList{
         self.lens
     }
 
-    //leta take a peek at the head data
+    //leta take a peek at the  head data
 
-   /* pub fn peek(&self) -> Option<i32>{
-        self.head.map(|node| Rc::try_unwrap(node).ok().expect("no val").into_inner().data )
-    }*/
+    pub fn peek(&mut self) -> Option<i32>{
+        self.head.take().map(| node| Rc::try_unwrap(node).ok().expect("no val").into_inner().data )
+    }
 }
